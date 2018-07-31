@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ps/1ps
 
 `define NUMPE 16
 `define PktLimit 100
@@ -6,8 +6,8 @@
 `define DataWidth 32
 `define AddressWidth $clog2(`NUMPE)
 `define TotalWidth `DataWidth+`AddressWidth
-`define PATTERN "Tornado"
-`define Period 10
+`define PATTERN "RANDOM"
+`define Period1 10000
 
 
 module tb();
@@ -63,10 +63,11 @@ initial
 begin
     clk = 0;
     receive_log_file = $fopen(receive_log_file_name,"w");
+    $fwrite(receive_log_file,"PE Address,","PE Address in Pkt,","Injection Time,","Latency\n");
     forever
     begin
         clk = ~clk;
-        #(`Period/2);
+        #(`Period1/2);
     end
 end
 
@@ -413,8 +414,8 @@ begin
             done = 1;
             stop = $time;
             $display("Start time %d Stop time %d",start,stop);
-            $display("Throughput : %f",`expectedPkts*1.0/((stop-start)/`Period));
-            #1000;
+            $display("Throughput : %f",`expectedPkts*1.0/((stop-start)/`Period1)," packets/cycle");
+            #100000;
             $fclose(receive_log_file_name);
             $stop;
         end

@@ -76,7 +76,7 @@ always @(posedge clk)
 begin
     if(i_data_valid)
     begin
-       latency = counter - i_data[DataWidth-1:0]-1;
+       latency = counter - i_data[DataWidth-1:0];
        $fwrite(receive_log_file,"%0d,%0d,%d,%d\n",address,i_data[DataWidth+:AddressWidth],i_data[DataWidth-1:0],latency);
        $fflush(receive_log_file);
        receivedPkts = receivedPkts + 1;

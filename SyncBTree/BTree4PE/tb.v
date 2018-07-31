@@ -8,13 +8,11 @@
 `define TotalWidth `DataWidth+`AddressWidth
 `define PATTERN "RANDOM"
 `define Period1 10000
-`define Period2 2500
 
 
 module tb();
 
 reg clk100;
-reg clk200;
 reg rst;
 
 reg[31:0] receivedPkts=0;
@@ -40,23 +38,13 @@ initial
 begin
     clk100 = 0;
     receive_log_file = $fopen(receive_log_file_name,"w");
+    $fwrite(receive_log_file,"PE Address,","PE Address in Pkt,","Injection Time,","Latency\n");
     forever
     begin
         clk100 = ~clk100;
         #(`Period1/2);
     end
 end
-
-initial
-begin
-    clk200 = 0;
-    forever
-    begin
-        clk200 = ~clk200;
-        #(`Period2/2);
-    end
-end
-
 
 initial
 begin
@@ -172,7 +160,7 @@ begin
             done = 1;
             stop = $time;
             $display("Start time %d Stop time %d",start,stop);
-            $display("Throughput : %f",`expectedPkts*1.0/((stop-start)/`Period1));
+            $display("Throughput : %f",`expectedPkts*1.0/((stop-start)/`Period1)," packets/cycle");
             #100000;
             $fclose(receive_log_file_name);
             $stop;
